@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fort Explorer - Discover India's Majestic Forts</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .logo span {
+            background: linear-gradient(45deg, #ffd700, #ff8c00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #ffd700;
+            transform: translateY(-2px);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 100px 20px;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #fff, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5)); }
+            50% { filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.8)); }
+        }
+
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 40px;
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 18px 60px 18px 20px;
+            border-radius: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #ffd700;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .search-box::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(45deg, #ffd700, #ff8c00);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-50%) scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            margin-top: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            z-index: 100;
+        }
+
+        .suggestion-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .suggestion-item:hover {
+            background: rgba(255, 215, 0, 0.2);
+            padding-left: 30px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            border-radius: 50px;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ffd700, #ff8c00);
+            color: #000;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #fff;
+            border: 2px solid #fff;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .features {
+            padding: 80px 50px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 42px;
+            margin-bottom: 60px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #ffd700;
+        }
+
+        .forts-showcase {
+            padding: 80px 50px;
+        }
+
+        .forts-showcase h2 {
+            text-align: center;
+            font-size: 42px;
+            margin-bottom: 60px;
+        }
+
+        .forts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .fort-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .fort-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .fort-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+        }
+
+        .fort-info {
+            padding: 20px;
+        }
+
+        .fort-info h3 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: #ffd700;
+        }
+
+        .fort-info p {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* Detail View Styles */
+        .detail-view {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .detail-container {
+            max-width: 1200px;
+            margin: 80px auto 40px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .close-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 0, 0, 0.8);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 2001;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 0, 0, 1);
+            transform: rotate(90deg);
+        }
+
+        .detail-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .detail-header h2 {
+            font-size: 48px;
+            margin-bottom: 10px;
+            color: #ffd700;
+        }
+
+        .detail-header .location {
+            font-size: 20px;
+            opacity: 0.8;
+        }
+
+        .detail-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .info-section {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .info-section h3 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .info-item {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .info-item strong {
+            color: #ffd700;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 450px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            margin-top: 40px;
+        }
+
+        .directions-btn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+
+        .directions-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.4);
+        }
+
+        .footer {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 40px 50px;
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        .footer p {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .nav-links {
+                gap: 15px;
+                font-size: 14px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .features, .forts-showcase {
+                padding: 40px 20px;
+            }
+
+            .detail-content {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-container {
+                padding: 20px;
+                margin: 60px 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo" onclick="goHome()">
+            <span>🏰 Fort Explorer</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#forts">Explore</a></li>
+            <li><a href="#about">About</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero" id="home">
+        <h1>Discover India's Magnificent Forts</h1>
+        <p>AI-Powered insights into centuries of history and architecture</p>
+        
+        <div class="search-container">
+            <input type="text" class="search-box" id="searchInput" placeholder="Search for any fort in India...">
+            <button class="search-btn" onclick="searchFort()">Search</button>
+            <div class="suggestions" id="suggestions"></div>
+        </div>
+
+        <div class="cta-buttons">
+            <button class="btn btn-primary" onclick="scrollToSection('forts')">Start Exploring</button>
+            <button class="btn btn-secondary" onclick="scrollToSection('features')">Learn More</button>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <h2>Why Choose Fort Explorer?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>AI-Powered Insights</h3>
+                <p>Get detailed historical information, architectural analysis, and fascinating stories powered by advanced AI</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📍</div>
+                <h3>Location Guide</h3>
+                <p>Find directions, visiting hours, and local tips for every fort across India</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📸</div>
+                <h3>Virtual Tours</h3>
+                <p>Explore forts through high-quality images and immersive 360° experiences</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <h3>Rich History</h3>
+                <p>Learn about battles, dynasties, and the cultural significance of each fort</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="forts-showcase" id="forts">
+        <h2>Featured Forts</h2>
+        <div class="forts-grid" id="fortsGrid"></div>
+    </section>
+
+    <!-- Detail View -->
+    <div class="detail-view" id="detailView">
+        <button class="close-btn" onclick="closeDetail()">✕</button>
+        <div class="detail-container" id="detailContent"></div>
+    </div>
+
+    <footer class="footer">
+        <p>© 2025 Fort Explorer - Powered by AI | Preserving India's Heritage</p>
+    </footer>
+
+    <script>
+        // Fort Database
+        const fortsData = {
+            'red fort': {
+                name: 'Red Fort',
+                location: 'Delhi',
+                lat: 28.6562,
+                lng: 77.2410,
+                built: '1638-1648',
+                builtBy: 'Emperor Shah Jahan',
+                architecture: 'Mughal Architecture',
+                unesco: 'Yes (2007)',
+                description: 'The Red Fort is a historic fortification in Old Delhi that served as the main residence of the Mughal emperors for nearly 200 years. Built by Emperor Shah Jahan, it represents the zenith of Mughal creativity and architecture.',
+                significance: 'Symbol of Indian independence, hosts the Prime Minister\'s Independence Day speech annually',
+                visitingHours: '9:30 AM - 4:30 PM (Closed on Mondays)',
+                entryFee: '₹35 for Indians, ₹500 for Foreigners',
+                bestTime: 'October to March',
+                nearbyAttractions: 'Jama Masjid, Chandni Chowk, Raj Ghat'
+            },
+            'amber fort': {
+                name: 'Amber Fort',
+                location: 'Jaipur, Rajasthan',
+                lat: 26.9855,
+                lng: 75.8513,
+                built: '1592',
+                builtBy: 'Raja Man Singh I',
+                architecture: 'Rajput and Mughal Architecture',
+                unesco: 'Yes (2013)',
+                description: 'Amber Fort is known for its artistic Hindu style elements and grand scale. Located high on a hill, it overlooks Maota Lake and offers stunning panoramic views. The fort is famous for its Sheesh Mahal (Mirror Palace).',
+                significance: 'One of the most important forts of Rajasthan, showcases the grandeur of Rajput rulers',
+                visitingHours: '8:00 AM - 6:00 PM (Daily)',
+                entryFee: '₹100 for Indians, ₹500 for Foreigners',
+                bestTime: 'October to March',
+                nearbyAttractions: 'Jaigarh Fort, Nahargarh Fort, City Palace, Hawa Mahal'
+            },
+            'mehrangarh fort': {
+                name: 'Mehrangarh Fort',
+                location: 'Jodhpur, Rajasthan',
+                lat: 26.2984,
+                lng: 73.0189,
+                built: '1459',
+                builtBy: 'Rao Jodha',
+                architecture: 'Rajput Architecture',
+                unesco: 'No (but on tentative list)',
+                description: 'One of the largest forts in India, Mehrangarh Fort stands 400 feet above the city of Jodhpur. The fort has seven gates and houses several palaces with intricate carvings and expansive courtyards.',
+                significance: 'Symbol of Marwar kingdom\'s power, houses one of the best-preserved museums in Rajasthan',
+                visitingHours: '9:00 AM - 5:00 PM (Daily)',
+                entryFee: '₹100 for Indians, ₹600 for Foreigners',
+                bestTime: 'October to March',
+                nearbyAttractions: 'Jaswant Thada, Umaid Bhawan Palace, Clock Tower'
+            },
+            'golconda fort': {
+                name: 'Golconda Fort',
+                location: 'Hyderabad, Telangana',
+                lat: 17.3833,
+                lng: 78.4011,
+                built: '13th Century (expanded in 16th-17th century)',
+                builtBy: 'Kakatiya Dynasty, later expanded by Qutb Shahi dynasty',
+                architecture: 'Indo-Islamic Architecture',
+                unesco: 'No',
+                description: 'Golconda Fort is famous for its acoustic architecture, diamond trade history, and innovative water supply system. The fort complex spans 11 km and was once the diamond trading center of the world.',
+                significance: 'Famous for diamonds including the Koh-i-Noor, engineering marvel with acoustic system',
+                visitingHours: '9:00 AM - 5:30 PM (Daily)',
+                entryFee: '₹25 for Indians, ₹300 for Foreigners',
+                bestTime: 'October to March',
+                nearbyAttractions: 'Qutb Shahi Tombs, Charminar, Hussain Sagar Lake'
+            },
+            'gwalior fort': {
+                name: 'Gwalior Fort',
+                location: 'Gwalior, Madhya Pradesh',
+                lat: 26.2295,
+                lng: 78.1686,
+                built: '8th Century onwards',
+                builtBy: 'Various dynasties',
+                architecture: 'Mix of Hindu and Islamic Architecture',
+                unesco: 'No',
+                description: 'Described as "the pearl amongst fortresses in India" by Mughal Emperor Babur, Gwalior Fort has been controlled by various dynasties. The fort complex includes palaces, temples, and has a rich 1000-year history.',
+                significance: 'Strategic military importance, houses magnificent palaces and temples',
+                visitingHours: '8:00 AM - 6:00 PM (Daily)',
+                entryFee: '₹75 for Indians, ₹250 for Foreigners',
+                bestTime: 'October to March',
+                nearbyAttractions: 'Man Singh Palace, Sas-Bahu Temple, Gujari Mahal Museum'
+            },
+            'chittorgarh fort': {
+                name: 'Chittorgarh Fort',
+                location: 'Chittorgarh, Rajasthan',
+                lat: 24.8829,
+                lng: 74.6470,
+                built: '7th Century',
+                builtBy: 'Mauryan rulers',
+                architecture: 'Rajput Architecture',
+                unesco: 'Yes (2013)',
+                description: 'The largest fort in India and Asia, Chittorgarh Fort is a UNESCO World Heritage Site. It stands on a 180m high hill and covers 700 acres. The fort is known for tales of valor, sacrifice, and the legendary Rani Padmini.',
+                significance: 'Symbol of Rajput pride and sacrifice, witnessed three major sieges',
+                visitingHours: '9:45 AM - 5:45 PM (Daily)',
+                entryFee: '₹50 for Indians, ₹300 for Foreigners',
+                bestTime: 'October to March',
+                nearbyAttractions: 'Vijay Stambh (Victory Tower), Kirti Stambh, Rana Kumbha Palace'
+            },
+            'jaisalmer fort': {
+                name: 'Jaisalmer Fort',
+                location: 'Jaisalmer, Rajasthan',
+                lat: 26.9124,
+                lng: 70.9166,
+                built: '1156',
+                builtBy: 'Rajput ruler Rawal Jaisal',
+                architecture: 'Rajput Architecture',
+                unesco: 'Yes (2013)',
+                description: 'Also known as Sonar Quila (Golden Fort), this is one of the few living forts in the world with a quarter of the city\'s population still residing within. Built from yellow sandstone, it glows golden in the desert sun.',
+                significance: 'Living fort with residential areas, shops, and hotels; important Silk Route trading center',
+                visitingHours: 'Open 24 hours (Living Fort)',
+                entryFee: 'Free entry to fort, ₹50 for palace complex',
+                bestTime: 'October to March',
+                nearbyAttractions: 'Patwon Ki Haveli, Sam Sand Dunes, Gadisar Lake'
+            },
+            'agra fort': {
+                name: 'Agra Fort',
+                location: 'Agra, Uttar Pradesh',
+                lat: 27.1795,
+                lng: 78.0211,
+                built: '1565-1573',
+                builtBy: 'Emperor Akbar',
+                architecture: 'Mughal Architecture',
+                unesco: 'Yes (1983)',
+                description: 'Agra Fort served as the main residence of the Mughal emperors until 1638. This massive red sandstone fort is a UNESCO World Heritage Site and was the seat of Mughal power for generations.',
+                significance: 'Emperor Shah Jahan was imprisoned here by his son Aurangzeb',
+                visitingHours: '6:00 AM - 6:00 PM (Daily)',
+                entryFee: '₹50 for Indians, ₹650 for Foreigners',
+                bestTime: 'October to March',
+                nearbyAttractions: 'Taj Mahal, Fatehpur Sikri, Itmad-ud-Daulah'
+            }
+        };
+
+        // Display featured forts
+        function displayForts() {
+            const grid = document.getElementById('fortsGrid');
+            const icons = ['🏰', '⚔️', '🛡️', '👑', '🏛️', '🌄', '🕌', '⚜️'];
+            let index = 0;
+            
+            for (let key in fortsData) {
+                const fort = fortsData[key];
+                const card = document.createElement('div');
+                card.className = 'fort-card';
+                card.onclick = () => showDetail(key);
+                card.innerHTML = `
+                    <div class="fort-image">${icons[index % icons.length]}</div>
+                    <div class="fort-info">
+                        <h3>${fort.name}</h3>
+                        <p>${fort.description.substring(0, 120)}...</p>
+                    </div>
+                `;
+                grid.appendChild(card);
+                index++;
+            }
+        }
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const suggestionsDiv = document.getElementById('suggestions');
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase();
+            if (query.length < 2) {
+                suggestionsDiv.style.display = 'none';
+                return;
+            }
+
+            const matches = Object.keys(fortsData).filter(key => 
+                key.includes(query) || fortsData[key].name.toLowerCase().includes(query)
+            );
+
+            if (matches.length > 0) {
+                suggestionsDiv.innerHTML = matches.map(key => 
+                    `<div class="suggestion-item" onclick="selectFort('${key}')">${fortsData[key].name}</div>`
+                ).join('');
+                suggestionsDiv.style.display = 'block';
+            } else {
+                suggestionsDiv.innerHTML = '<div class="suggestion-item">No forts found</div>';
+                suggestionsDiv.style.display = 'block';
+            }
+        });
+
+        function selectFort(fortKey) {
+            searchInput.value = fortsData[fortKey].name;
+            suggestionsDiv.style.display = 'none';
+            showDetail(fortKey);
+        }
+
+        function searchFort() {
+            const query = searchInput.value.toLowerCase();
+            const fortKey = Object.keys(fortsData).find(key => 
+                key === query || fortsData[key].name.toLowerCase() === query
+            );
+
+            if (fortKey) {
+                showDetail(fortKey);
+            } else {
+                // Try partial match
+                const partialMatch = Object.keys(fortsData).find(key => 
+                    key.includes(query) || fortsData[key].name.toLowerCase().includes(query)
+                );
+                
+                if (partialMatch) {
+                    showDetail(partialMatch);
+                } else {
+                    alert('Fort not found. Please try: Red Fort, Amber Fort, Mehrangarh Fort, Golconda Fort, Gwalior Fort, Chittorgarh Fort, Jaisalmer Fort, or Agra Fort');
+                }
+            }
+        }
+
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchFort();
+            }
+        });
+
+        // Show detail view
+        function showDetail(fortKey) {
+            const fort = fortsData[fortKey];
+            const detailView = document.getElementById('detailView');
+            const detailContent = document.getElementById('detailContent');
+
+            detailContent.innerHTML = `
+                <div class="detail-header">
+                    <h2>${fort.name}</h2>
+                    <p class="location">📍 ${fort.location}</p>
+                </div>
+
+                <div class="detail-content">
+                    <div class="info-section">
+                        <h3>Historical Information</h3>
+                        <div class="info-item"><strong>Built:</strong> ${fort.built}</div>
+                        <div class="info-item"><strong>Built By:</strong> ${fort.builtBy}</div>
+                        <div class="info-item"><strong>Architecture:</strong> ${fort.architecture}</div>
+                        <div class="info-item"><strong>UNESCO Status:</strong> ${fort.unesco}</div>
+                        <div class="info-item"><strong>Description:</strong> ${fort.description}</div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Visitor Information</h3>
+                        <div class="info-item"><strong>Visiting Hours:</strong> ${fort.visitingHours}</div>
+                        <div class="info-item"><strong>Entry Fee:</strong> ${fort.entryFee}</div>
+                        <div class="info-item"><strong>Best Time to Visit:</strong> ${fort.bestTime}</div>
+                        <div class="info-item"><strong>Nearby Attractions:</strong> ${fort.nearbyAttractions}</div>
+                    </div>
+                </div>
+
+                <div class="info-
